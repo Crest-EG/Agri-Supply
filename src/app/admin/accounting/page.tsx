@@ -14,7 +14,7 @@ export default async function AccountingPage() {
   const commission = settings?.default_commission_pct ?? 0;
 
   return <>
-    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-bold text-green-700">التقارير / المحاسبة</p><h1 className="mt-2 flex items-center gap-3 text-2xl font-extrabold md:text-3xl"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-green-700"><Wallet size={22} /></span>المحاسبة والماليات والتدقيق</h1><p className="mt-2 text-sm text-green-900/70">العمولة الافتراضية وتقارير جميع الرحلات.</p></div><a href="/admin/accounting/export" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-green-700 bg-white px-5 font-bold text-green-900 hover:bg-green-50">تصدير السجل المالي CSV</a></div>
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-bold text-green-700">التقارير / المحاسبة</p><h1 className="mt-2 flex items-center gap-3 text-2xl font-extrabold md:text-3xl"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-green-700"><Wallet size={22} /></span>المحاسبة والماليات والتدقيق</h1><p className="mt-2 text-sm text-green-900/70">العمولة الافتراضية وتقارير جميع الحركات.</p></div><a href="/admin/accounting/export" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-green-700 bg-white px-5 font-bold text-green-900 hover:bg-green-50">تصدير السجل المالي CSV</a></div>
     <div className="mt-5"><CommissionForm initialValue={commission} /></div>
     {error ? <p role="alert" className="mt-5 rounded-xl bg-orange-100 p-4 text-orange-700">تعذر تحميل بيانات المحاسبة. تحقق من الاتصال والصلاحيات.</p> : <>
       {rows.length ? <>

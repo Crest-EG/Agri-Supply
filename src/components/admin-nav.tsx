@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const items = [["/trips", "الرحلات"], ["/suppliers", "الموردون"], ["/admin/factories", "المصانع"], ["/admin/products", "المنتجات والأسعار"], ["/admin/users", "المستخدمون"], ["/admin/accounting", "المحاسبة"]];
+const items = [["/trips", "الحركات"], ["/suppliers", "الموردون"], ["/admin/factories", "المصانع"], ["/admin/products", "المنتجات والأسعار"], ["/admin/users", "المستخدمون"], ["/admin/accounting", "المحاسبة"]];
 
 export function AdminNav() {
   const pathname = usePathname();

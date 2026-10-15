@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <div aria-hidden className="pointer-events-none absolute -bottom-36 -end-28 h-96 w-96 rounded-full bg-orange-100/70 blur-3xl" />
     <section className="relative w-full max-w-md rounded-3xl border border-green-100 bg-white p-7 shadow-lg shadow-green-900/5 md:p-9">
       <Link href="/" className="flex flex-col items-center text-center"><Image src="/Crest-Agri.png" alt="Crest Agri" width={105} height={90} priority className="h-[76px] w-auto object-contain" /><span className="mt-3 text-sm font-bold text-green-700">منظومة متابعة التوريدات الزراعية</span></Link>
-      <div className="mt-7 rounded-2xl bg-green-50 p-5 text-center"><h1 className="text-2xl font-extrabold">تسجيل الدخول إلى المنظومة</h1><p className="mt-2 text-sm leading-6 text-green-900/70">أدخل بيانات حسابك لمتابعة الرحلات والتوريدات.</p></div>
+      <div className="mt-7 rounded-2xl bg-green-50 p-5 text-center"><h1 className="text-2xl font-extrabold">تسجيل الدخول إلى المنظومة</h1><p className="mt-2 text-sm leading-6 text-green-900/70">أدخل بيانات حسابك لمتابعة الحركات والتوريدات.</p></div>
       {error && <p role="alert" className="mt-5 rounded-xl border border-orange-500 bg-orange-100 p-3 text-sm text-green-900">{errors[error] ?? "تعذر تسجيل الدخول."}</p>}
       <form action={signIn} className="mt-6 space-y-4">
         <label className="block text-sm font-semibold">رقم الهاتف<input name="phone" type="tel" inputMode="tel" autoComplete="tel" required className="mt-2 w-full rounded-xl border border-green-100 ps-4 pe-4 py-3" placeholder="01012345678" /></label>

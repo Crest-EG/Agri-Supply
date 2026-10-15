@@ -17,7 +17,7 @@ export function AppHeader({ profile, title }: { profile: { full_name: string; ro
           <div className="flex min-w-0 items-center gap-3"><Link href="/trips" aria-label="Crest Agri" className="shrink-0"><Image src="/logo black- horizontal.png" alt="Crest Agri" width={160} height={46} priority className="h-9 w-auto object-contain" /></Link><span aria-hidden className="hidden h-8 border-s border-green-100 sm:block" /><div className="hidden min-w-0 sm:block"><p className="truncate text-sm font-bold">{title ?? (admin ? "لوحة الإدارة" : "إدارة التوريدات")}</p><p className="truncate text-xs text-green-900/70">{profile.full_name}</p></div></div>
           <div className="flex shrink-0 items-center gap-2"><span className="hidden rounded-full bg-green-50 px-3 py-2 text-xs font-semibold sm:inline-flex">{profile.full_name}</span><SignOutButton /></div>
         </div>
-        <div className="hidden overflow-x-auto border-t border-green-100 py-2 md:block">{admin ? <AdminNav /> : <nav aria-label="أقسام التطبيق" className="flex min-w-max items-center gap-1 text-sm"><Link href="/trips" className="rounded-lg px-3 py-2 text-xs font-bold hover:bg-green-50">الرحلات</Link><Link href="/suppliers" className="rounded-lg px-3 py-2 text-xs font-bold hover:bg-green-50">الموردون</Link></nav>}</div>
+        <div className="hidden overflow-x-auto border-t border-green-100 py-2 md:block">{admin ? <AdminNav /> : <nav aria-label="أقسام التطبيق" className="flex min-w-max items-center gap-1 text-sm"><Link href="/trips" className="rounded-lg px-3 py-2 text-xs font-bold hover:bg-green-50">الحركات</Link><Link href="/suppliers" className="rounded-lg px-3 py-2 text-xs font-bold hover:bg-green-50">الموردون</Link></nav>}</div>
       </div>
     </header>
     <AppNav admin={admin} />

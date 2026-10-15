@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Factory, Home, Package, Users, Wallet } from "lucide-react";
 
-const items = [["/trips", "الرحلات", Home], ["/suppliers", "الموردون", Users]] as const;
+const items = [["/trips", "الحركات", Home], ["/suppliers", "الموردون", Users]] as const;
 const adminItems = [
-  ["/trips", "الرحلات", Home],
+  ["/trips", "الحركات", Home],
   ["/suppliers", "الموردون", Users],
   ["/admin/factories", "المصانع", Factory],
   ["/admin/products", "المنتجات", Package],
