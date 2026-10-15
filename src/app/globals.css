@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green-500: #50B94E;
+  --color-green-700: #2E762D;
+  --color-green-900: #0F2A10;
+  --color-green-100: #E3F4E2;
+  --color-green-50: #F3FAF3;
+  --color-orange-500: #F7941D;
+  --color-orange-700: #B35A00;
+  --color-orange-100: #FDEBD3;
+}
+
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #F8FAF8; color: var(--color-green-900); font-family: var(--font-cairo), "IBM Plex Sans Arabic", Arial, sans-serif; }
+button, input, select, textarea { font: inherit; }
+button { transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea {
+  border-color: var(--color-green-100);
+  background-color: #FFFFFF;
+  color: var(--color-green-900);
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select { min-height: 48px; }
+textarea { min-height: 96px; }
+input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--color-green-900) 55%, transparent); opacity: 1; }
+:focus-visible { outline: 2px solid var(--color-green-700); outline-offset: 2px; }
+table thead { color: var(--color-green-900); border-bottom: 2px solid var(--color-green-700); }
+table tbody tr:hover { background-color: var(--color-green-50); }

@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.next-profile/
+out/
+.vercel/
+.env*
+!.env.example
+npm-debug.log*
+public/sw*
+public/swe-worker*
