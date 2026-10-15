@@ -1,47 +1,62 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { offlineDb, saveCache } from "@/lib/offline/db";
-import { syncQueuedTrip } from "@/app/trips/offline-actions";
 
 let syncActive = false;
-async function synchronize() {
+async function synchronize(refreshChangedData: () => void) {
   if (!navigator.onLine || syncActive) return;
   syncActive = true;
+  let dataChanged = false;
   try {
   const ownerId = localStorage.getItem("crest-owner-id");
   if (!ownerId) return;
   const entries = await offlineDb.outbox.where("owner_id").equals(ownerId).and((entry) => entry.status === "pending" && entry.next_attempt_at <= Date.now()).sortBy("created_at");
   for (const entry of entries) {
-    const result = await syncQueuedTrip(entry.payload);
+    const form = new FormData();
+    const { photo, ...payload } = entry.payload;
+    form.set("payload", JSON.stringify(payload));
+    if (photo) form.set("photo", photo, "trip-photo.webp");
+    let result: { ok: boolean; retryable?: boolean; reason?: string; trip?: Record<string, unknown> };
+    try {
+      const response = await fetch("/api/trips/sync", { method: "POST", body: form });
+      result = await response.json();
+    } catch {
+      result = { ok: false, reason: "تعذر الاتصال بالخادم.", retryable: true };
+    }
     if (result.ok) {
+      dataChanged = true;
       await offlineDb.outbox.delete(entry.id);
       const trips = await offlineDb.cache.get(`trips:${ownerId}`);
       const list = Array.isArray(trips?.value) ? trips.value as Record<string, unknown>[] : [];
-      const next = { ...list.find((trip) => trip.id === result.trip.id), ...result.trip };
-      await saveCache(ownerId, "trips", [next, ...list.filter((trip) => trip.id !== result.trip.id)]);
-      await saveCache(ownerId, `trip:${result.trip.id}`, next);
+      const syncedTrip = result.trip ?? {};
+      const tripId = String(syncedTrip.id ?? entry.trip_id);
+      const next = { ...list.find((trip) => trip.id === tripId), ...syncedTrip };
+      await saveCache(ownerId, "trips", [next, ...list.filter((trip) => trip.id !== tripId)]);
+      await saveCache(ownerId, `trip:${tripId}`, next);
     } else {
       const attempts = entry.attempts + 1;
-      const delay = Math.min(60 * 60 * 1000, 2_000 * 2 ** Math.min(attempts, 10));
       await offlineDb.outbox.update(entry.id, {
         attempts,
         status: result.retryable ? "pending" : "failed",
-        next_attempt_at: Date.now() + delay,
-        error: result.reason,
+        next_attempt_at: Date.now() + Math.min(60 * 60 * 1000, 2_000 * 2 ** Math.min(attempts, 10)),
+        error: result.reason ?? "تعذرت المزامنة.",
       });
-      if (result.retryable) window.setTimeout(() => window.dispatchEvent(new Event("online")), delay);
+      // Retry on the next online/focus/visibility event instead of polling with a timer.
     }
     window.dispatchEvent(new Event("crest-outbox-change"));
   }
+  if (dataChanged) refreshChangedData();
   } finally {
     syncActive = false;
   }
 }
 
 export function SyncProvider() {
+  const router = useRouter();
   useEffect(() => {
-    const attempt = () => { void synchronize(); };
+    const attempt = () => { void synchronize(() => router.refresh()); };
     window.addEventListener("online", attempt);
     window.addEventListener("crest-outbox-change", attempt);
     window.addEventListener("focus", attempt);
@@ -53,6 +68,6 @@ export function SyncProvider() {
       window.removeEventListener("focus", attempt);
       document.removeEventListener("visibilitychange", attempt);
     };
-  }, []);
+  }, [router]);
   return null;
 }

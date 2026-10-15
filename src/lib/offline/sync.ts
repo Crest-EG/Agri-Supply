@@ -1,20 +1,19 @@
-"use server";
-
 import { requireProfile } from "@/lib/authz";
 import type { Database } from "@/lib/database.types";
 import type { QueuedTrip } from "@/lib/offline/types";
 
 type TripInsert = Database["public"]["Tables"]["trips"]["Insert"];
-type SyncResult = { ok: true; trip: Pick<TripInsert, "id" | "trip_date" | "engineer_id" | "supplier_id" | "product_id" | "factory_id" | "status" | "plate_number" | "photo_path" | "photo_blur" | "weight_kg" | "price_per_kg" | "commission_pct"> & { trip_no: number | null; gross_amount: number | null; commission_amount: number | null; supplier_payable: number | null } } | { ok: false; reason: string; retryable: boolean };
+export type SyncResult = { ok: true; trip: Pick<TripInsert, "id" | "trip_date" | "engineer_id" | "supplier_id" | "product_id" | "factory_id" | "status" | "plate_number" | "photo_path" | "photo_blur" | "weight_kg" | "price_per_kg" | "commission_pct"> & { trip_no: number | null; gross_amount: number | null; commission_amount: number | null; supplier_payable: number | null } } | { ok: false; reason: string; retryable: boolean };
+export type SyncSession = Awaited<ReturnType<typeof requireProfile>>;
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function permanentMessage(message: string) {
   return /row-level security|not allowed|permission|violat|locked|foreign key|check constraint|invalid|not found|does not exist|json object requested|0 rows/i.test(message);
 }
 
-export async function syncQueuedTrip(payload: QueuedTrip): Promise<SyncResult> {
+export async function syncQueuedTrip(payload: QueuedTrip, session?: SyncSession): Promise<SyncResult> {
   try {
-    const { supabase, user, profile } = await requireProfile();
+    const { supabase, user, profile } = session ?? await requireProfile();
     if (!uuidPattern.test(payload.id) || payload.owner_id !== user.id) return { ok: false, reason: "الحساب الحالي لا يطابق صاحب الرحلة.", retryable: false };
     if (!uuidPattern.test(payload.supplier_id) || !uuidPattern.test(payload.product_id) || (payload.factory_id && !uuidPattern.test(payload.factory_id))) return { ok: false, reason: "بيانات المورد أو المنتج أو المصنع غير صالحة.", retryable: false };
     const isAdmin = profile.role === "admin";
