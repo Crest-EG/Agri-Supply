@@ -23,7 +23,13 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   applicationName: "Crest Supply",
   appleWebApp: { capable: true, title: "Crest Supply", statusBarStyle: "default" },
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  icons: {
+    icon: [
+      { url: "/icons/crest-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/crest-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = { themeColor: "#2E762D", width: "device-width", initialScale: 1 };
