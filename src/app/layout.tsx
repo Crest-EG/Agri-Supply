@@ -18,7 +18,7 @@ const cairo = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Crest | متابعة التوريدات",
+  title: "Crest Supply",
   description: "متابعة رحلات التوريد من المورد إلى المصنع",
   manifest: "/manifest.webmanifest",
   applicationName: "Crest Supply",

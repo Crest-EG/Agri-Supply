@@ -44,5 +44,4 @@ export async function retryTripSync(tripId: string, ownerId: string) {
   if (entry?.owner_id !== ownerId) return;
   await offlineDb.outbox.update(entry.id, { status: "pending", next_attempt_at: Date.now(), error: null });
   window.dispatchEvent(new Event("crest-outbox-change"));
-  window.dispatchEvent(new Event("online"));
 }

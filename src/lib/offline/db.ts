@@ -21,6 +21,17 @@ export async function saveCache(ownerId: string, kind: string, value: unknown) {
   await offlineDb.cache.put({ key, owner_id: ownerId, kind, value, updated_at: new Date().toISOString() });
 }
 
+export async function saveCacheIfChanged(ownerId: string, kind: string, value: unknown) {
+  const key = `${kind}:${ownerId}`;
+  const serializedValue = JSON.stringify(value);
+  return offlineDb.transaction("rw", offlineDb.cache, async () => {
+    const existing = await offlineDb.cache.get(key);
+    if (existing && JSON.stringify(existing.value) === serializedValue) return false;
+    await offlineDb.cache.put({ key, owner_id: ownerId, kind, value, updated_at: new Date().toISOString() });
+    return true;
+  });
+}
+
 export async function readCache(ownerId: string) {
   const rows = await offlineDb.cache.where("owner_id").equals(ownerId).toArray();
   return new Map(rows.map((row) => [row.kind, row.value]));
